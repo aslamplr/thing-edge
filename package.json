@@ -1,0 +1,18 @@
+{
+  "name": "thing-edge",
+  "version": "0.0.1",
+  "description": "thing-edge the home server for thing",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "aslamplr",
+  "license": "ISC",
+  "devDependencies": {
+    "mqtt": "^1.12.0"
+  },
+  "dependencies": {
+    "mqtt": "^1.12.0"
+  }
+}
