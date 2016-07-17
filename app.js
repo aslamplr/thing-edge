@@ -12,10 +12,10 @@ client.on('connect', ()=>{
 
 client.on('message', (topic, message) => {
     switch(topic){
-	case status_topic: 
+	case status_topic:
 		handleStatusUpdate(message);
 		break;
-	default: 
+	default:
 		console.log("message from topic %s -> %s", topic, message);
     }
         ledstate = (message.toString() === '1');
