@@ -25,12 +25,12 @@ client.on('message', (topic, message) => {
 });
 
 function handle_control_topic(message){
-    ledcontrol = (message.toString() === '1');
+    ledcontrol = (message.toString()[0] === '1');
     console.log("control published, led to %s", ledcontrol?'up':'off');
 }
 
 function handle_status_update(message){
-    ledstate = (message.toString() === '1');
+    ledstate = (message.toString()[0] === '1');
     console.log("status recvd from esp, led is %s", ledstate?'up':'off');
 }
 
