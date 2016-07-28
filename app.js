@@ -2,13 +2,15 @@ const mqtt = require("mqtt"),
       client = mqtt.connect("mqtt://127.0.0.1");
 
 const status_topic = 'esp8266/status/led',
-      control_topic = 'esp8266/control/led';
+      control_topic = 'esp8266/control/led',
+      override_topic = 'esp8266/override/led';
 
 var ledstate, ledcontrol;
 
 client.on('connect', ()=>{
     client.subscribe(status_topic);
     client.subscribe(control_topic);
+    client.subscribe(override_topic);
 });
 
 client.on('message', (topic, message) => {
@@ -19,10 +21,18 @@ client.on('message', (topic, message) => {
   case control_topic:
     handle_control_topic(message);
     break;
+  case override_topic:
+    handle_override_topic(message);
+    break;
 	default:
 		console.log("message from topic %s -> %s", topic, message);
     }
 });
+
+function handle_override_topic(message){
+  ledcontrol = (message.toString()[0] === '1');
+  console.log("override published, led to %s", ledcontrol?'up':'off');
+}
 
 function handle_control_topic(message){
     ledcontrol = (message.toString()[0] === '1');
