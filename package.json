@@ -2,17 +2,26 @@
   "name": "thing-edge",
   "version": "0.0.1",
   "description": "thing-edge the home server for thing",
-  "main": "app.js",
+  "main": "cloud_server.js",
+  "engines": {
+    "node": ">=6.2 <7",
+    "npm": ">=3.9 <4"
+  },
   "scripts": {
-    "start": "node app.js",
+    "start": "node cloud_server.js",
     "test": "echo \"Test will be written\" && exit 0"
   },
   "author": "aslamplr",
   "license": "Apache version 2.0",
-  "devDependencies": {
-    "mqtt": "^1.12.0"
-  },
   "dependencies": {
-    "mqtt": "^1.12.0"
+    "body-parser": "^1.15.2",
+    "bufferutil": "^1.2.1",
+    "express": "^4.14.0",
+    "mqtt": "^1.12.0",
+    "utf-8-validate": "^1.2.1",
+    "ws": "^1.1.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
   }
 }
