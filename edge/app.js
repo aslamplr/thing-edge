@@ -1,13 +1,14 @@
-const mqtt = require("mqtt"),
-    client = mqtt.connect("mqtt://localhost"),
+const config = require("../.config.json"),
+    mqtt = require("mqtt"),
+    client = mqtt.connect(config.mqtt),
     WebSocket = require('ws'),
-    ws = new WebSocket('ws://localhost:8889/ws');
+    ws = new WebSocket(config.wss);
 
 const status_topic = 'esp8266/status/led',
     control_topic = 'esp8266/control/led',
     override_topic = 'esp8266/override/led';
 
-var ledstate, ledcontrol;
+let ledstate, ledcontrol;
 
 ws.on('open', function() {
     ws.send(JSON.stringify({

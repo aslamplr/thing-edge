@@ -1,4 +1,4 @@
-var server = require('http').createServer(),
+const server = require('http').createServer(),
     url = require('url'),
     WebSocketServer = require('ws').Server,
     wss = new WebSocketServer({
@@ -10,7 +10,7 @@ var server = require('http').createServer(),
     port = 8889,
     bodyParser = require('body-parser');
 
-var ledstate = false;
+let ledstate = false;
 
 wss.broadcast = (data) => {
     wss.clients.forEach(function each(client) {

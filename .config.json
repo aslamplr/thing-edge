@@ -1,0 +1,4 @@
+{
+  "mqtt": "mqtt://localhost",
+  "wss": "ws://localhost:8889/ws"
+}
