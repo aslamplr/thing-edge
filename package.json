@@ -8,7 +8,7 @@
     "npm": ">=3.9 <4"
   },
   "scripts": {
-    "start": "webpack && node cloud_server.js",
+    "start": "node cloud_server.js",
     "test": "echo \"Test will be written\" && exit 0"
   },
   "author": "aslamplr",

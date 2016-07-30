@@ -10,3 +10,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+deploy:
+  provider: openshift
+  user: "aslamplr@gmail.com"
+  password: "64ce52f7019302d693a180a3124552839930318671163130c20086079fff1d94" # can be encrypted
+  domain: "edgeiot"
