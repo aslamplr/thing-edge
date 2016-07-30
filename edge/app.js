@@ -1,29 +1,47 @@
 const config = require("../.config.json"),
     mqtt = require("mqtt"),
     client = mqtt.connect(config.mqtt),
-    WebSocket = require('ws'),
-    ws = new WebSocket(config.wss);
+    WebSocket = require('ws');
 
 const status_topic = 'esp8266/status/led',
     control_topic = 'esp8266/control/led',
     override_topic = 'esp8266/override/led';
 
+var ws = new WebSocket(config.wss);
+
 let ledstate, ledcontrol;
 
-ws.on('open', function() {
-    ws.send(JSON.stringify({
-        action: 'get'
-    }));
-});
+function connectSocket() {
+    ws = new WebSocket(config.wss);
+    ws.on('open', () => {
+        ws.send(JSON.stringify({
+            action: 'get'
+        }));
+        console.log("socket open");
+    });
 
-ws.on('message', function(message) {
-    console.log('received: %s', message);
-    let msg = JSON.parse(message),
-        status = msg.status;
-    ledcontrol = status;
-    if (ledstate !== undefined && ledstate !== ledcontrol)
-        command_esp(ledcontrol ? '1' : '0');
-});
+    ws.on('message', (message) => {
+        console.log('received: %s', message);
+        let msg = JSON.parse(message),
+            status = msg.status;
+        ledcontrol = status;
+        if (ledstate !== undefined && ledstate !== ledcontrol)
+            command_esp(ledcontrol ? '1' : '0');
+    });
+
+    ws.on('error', () => {
+        console.log("socket error");
+    })
+
+    ws.on('close', () => {
+        console.log("socket closed.");
+        setTimeout(() => {
+            connectSocket();
+        }, 100000);
+    })
+}
+
+connectSocket();
 
 client.on('connect', () => {
     client.subscribe(status_topic);
@@ -75,7 +93,7 @@ function command_esp(message) {
 function start_loop() {
     setTimeout(() => {
         looper();
-    }, 5000);
+    }, 3000);
 
     function looper() {
         if (ledcontrol !== undefined && ledstate !== ledcontrol)
