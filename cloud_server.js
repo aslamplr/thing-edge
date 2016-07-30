@@ -49,6 +49,20 @@ wss.on('connection', (ws) => {
         }
     });
 
+    ws.on('ping', () => {
+      console.log("socket pinged from client.");
+      ws.pong('1');
+    });
+
+    ws.on('pong',() => {
+      console.log("socket ponged!");
+    });
+
+    setInterval(()=>{
+      console.log("send socket ping to client");
+      ws.ping('1');
+    }, 60000);
+
     ws.send(JSON.stringify({
         status: ledstate
     }));

@@ -17,7 +17,7 @@ function connectSocket() {
         ws.send(JSON.stringify({
             action: 'get'
         }));
-        console.log("socket open");
+        console.log("socket open.");
     });
 
     ws.on('message', (message) => {
@@ -30,15 +30,29 @@ function connectSocket() {
     });
 
     ws.on('error', () => {
-        console.log("socket error");
-    })
+        console.log("socket error.");
+    });
 
     ws.on('close', () => {
         console.log("socket closed.");
         setTimeout(() => {
             connectSocket();
-        }, 100000);
-    })
+        }, 60000);
+    });
+
+    ws.on('ping',() => {
+      console.log("socket pinged.");
+      ws.pong('1');
+    });
+
+    ws.on('pong',() => {
+      console.log("socket ponged!");
+    });
+
+    setInterval(()=>{
+      console.log("send socket ping to server");
+      ws.ping('1');
+    }, 9000);
 }
 
 connectSocket();
