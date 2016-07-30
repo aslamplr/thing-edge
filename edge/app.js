@@ -37,7 +37,7 @@ function connectSocket() {
         console.log("socket closed.");
         setTimeout(() => {
             connectSocket();
-        }, 60000);
+        }, 9000);
     });
 
     ws.on('ping', () => {

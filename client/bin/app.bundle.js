@@ -22688,6 +22688,8 @@
 
 	var _api = __webpack_require__(183);
 
+	var _wsocket = __webpack_require__(184);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22718,6 +22720,10 @@
 	            setTimeout(function () {
 	                (0, _api.getStatus)(function (data) {
 	                    console.log("get /api/led", data);
+	                    _this2.setState({ on: data.status });
+	                }.bind(_this2));
+
+	                (0, _wsocket.onChange)(function (data) {
 	                    _this2.setState({ on: data.status });
 	                }.bind(_this2));
 	            }.bind(this));
@@ -22802,6 +22808,28 @@
 	        request.send();
 	    }
 	}
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(console) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.onChange = onChange;
+	var HOST = location.origin.replace(/^http/, 'ws');
+
+	function onChange(callback) {
+	    var ws = new WebSocket(HOST + '/ws');
+	    ws.onmessage = function (event) {
+	        console.log('received: %s', event.data);
+	        var message = JSON.parse(event.data);
+	        callback(message);
+	    };
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }
 /******/ ]);

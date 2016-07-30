@@ -40,9 +40,9 @@ wss.on('connection', (ws) => {
                 break;
             case 'post':
                 ledstate = req.payload;
-                ws.send(JSON.stringify({
+                wss.broadcast({
                     status: ledstate
-                }));
+                });
                 break;
             default:
                 console.log("Invalid request");

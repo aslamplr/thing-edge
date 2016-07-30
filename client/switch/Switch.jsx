@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getStatus, setStatus } from './api.jsx';
+import {getStatus, setStatus} from './api.jsx';
+import {onChange} from './wsocket.jsx';
 
 export default class Switch extends React.Component {
     constructor(props) {
@@ -14,6 +15,10 @@ export default class Switch extends React.Component {
         setTimeout((() => {
             getStatus(((data) => {
                 console.log("get /api/led", data);
+                this.setState({on: data.status});
+            }).bind(this));
+
+            onChange(((data) => {
                 this.setState({on: data.status});
             }).bind(this));
         }).bind(this));
