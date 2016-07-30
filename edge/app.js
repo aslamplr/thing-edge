@@ -40,18 +40,18 @@ function connectSocket() {
         }, 60000);
     });
 
-    ws.on('ping',() => {
-      console.log("socket pinged.");
-      ws.pong('1');
+    ws.on('ping', () => {
+        console.log("socket pinged.");
+        ws.pong('1', {}, true);
     });
 
-    ws.on('pong',() => {
-      console.log("socket ponged!");
+    ws.on('pong', () => {
+        console.log("socket ponged!");
     });
 
-    setInterval(()=>{
-      console.log("send socket ping to server");
-      ws.ping('1');
+    setInterval(() => {
+        console.log("send socket ping to server");
+        ws.ping('1', {}, true);
     }, 9000);
 }
 

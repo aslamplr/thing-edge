@@ -50,23 +50,25 @@ wss.on('connection', (ws) => {
     });
 
     ws.on('ping', () => {
-      console.log("socket pinged from client.");
-      ws.pong('1');
+        console.log("socket pinged from client.");
+        ws.pong('1', {}, true);
     });
 
-    ws.on('pong',() => {
-      console.log("socket ponged!");
+    ws.on('pong', () => {
+        console.log("socket ponged!");
     });
-
-    setInterval(()=>{
-      console.log("send socket ping to client");
-      ws.ping('1');
-    }, 60000);
 
     ws.send(JSON.stringify({
         status: ledstate
     }));
 });
+
+setInterval(() => {
+    console.log("send socket ping to client");
+    wss.clients.forEach(function each(client) {
+        client.ping('1', {}, true);
+    });
+}, 60000);
 
 app.route('/api/led')
     .get((req, res) => {
