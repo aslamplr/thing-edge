@@ -22829,7 +22829,7 @@
 	                ws.close();
 	            }
 	            console.log("reconnecting socket");
-	            ws = connectSocket();
+	            ws = connectSocket(callback);
 	        }
 	    }, 3000);
 	}
