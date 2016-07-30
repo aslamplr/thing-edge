@@ -1,5 +1,6 @@
 {
   "mqtt": "mqtt://localhost",
   "wss_local": "ws://localhost:8889/ws",
-  "wss": "wss://desolate-reef-13724.herokuapp.com/ws"
+  "wss_heroku": "wss://desolate-reef-13724.herokuapp.com/ws",
+  "wss": "ws://www.thingedge.com/ws"
 }
