@@ -68,7 +68,7 @@ setInterval(() => {
     wss.clients.forEach(function each(client) {
         client.ping('1', {}, true);
     });
-}, 60000);
+}, 9000);
 
 app.route('/api/led')
     .get((req, res) => {

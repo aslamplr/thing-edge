@@ -22792,13 +22792,13 @@
 	            success(data);
 	        } else {
 	            // We reached our target server, but it returned an error
-	            error();
+	            if (error) error();
 	        }
 	    };
 
 	    request.onerror = function () {
 	        // There was a connection error of some sort
-	        error();
+	        if (error) error();
 	    };
 
 	    if (method === 'POST') {
@@ -22822,12 +22822,26 @@
 	var HOST = location.origin.replace(/^http/, 'ws');
 
 	function onChange(callback) {
+	    var ws = connectSocket(callback);
+	    setInterval(function () {
+	        if (ws.readyState !== ws.OPEN) {
+	            if (ws.readyState !== ws.CLOSED) {
+	                ws.close();
+	            }
+	            console.log("reconnecting socket");
+	            ws = connectSocket();
+	        }
+	    }, 3000);
+	}
+
+	function connectSocket(callback) {
 	    var ws = new WebSocket(HOST + '/ws');
 	    ws.onmessage = function (event) {
 	        console.log('received: %s', event.data);
 	        var message = JSON.parse(event.data);
 	        callback(message);
 	    };
+	    return ws;
 	}
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 

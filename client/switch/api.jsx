@@ -17,13 +17,13 @@ function xmlHttpRequest(method, url, success, error, data) {
             success(data);
         } else {
             // We reached our target server, but it returned an error
-            error();
+            if(error) error();
         }
     };
 
     request.onerror = function() {
         // There was a connection error of some sort
-        error();
+        if(error) error();
     };
 
     if (method === 'POST') {

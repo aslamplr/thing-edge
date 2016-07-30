@@ -7,12 +7,22 @@ const status_topic = 'esp8266/status/led',
     control_topic = 'esp8266/control/led',
     override_topic = 'esp8266/override/led';
 
-var ws = new WebSocket(config.wss);
+var ws;
 
 let ledstate, ledcontrol;
 
 function connectSocket() {
+  try {
     ws = new WebSocket(config.wss);
+  } catch (e) {
+    console.log("Server seems to be down, no socket connection", e);
+  } finally {
+    if(ws) registerSocketEvents();
+    else setTimeout(()=>{connectSocket();}, 5000);
+  }
+}
+
+function registerSocketEvents(){
     ws.on('open', () => {
         ws.send(JSON.stringify({
             action: 'get'
@@ -29,12 +39,12 @@ function connectSocket() {
             command_esp(ledcontrol ? '1' : '0');
     });
 
-    ws.on('error', () => {
-        console.log("socket error.");
+    ws.on('error', (e) => {
+        console.log("socket error.", e);
     });
 
-    ws.on('close', () => {
-        console.log("socket closed.");
+    ws.on('close', (m) => {
+        console.log("socket closed.", m);
         setTimeout(() => {
             connectSocket();
         }, 9000);
@@ -48,11 +58,6 @@ function connectSocket() {
     ws.on('pong', () => {
         console.log("socket ponged!");
     });
-
-    setInterval(() => {
-        console.log("send socket ping to server");
-        ws.ping('1', {}, true);
-    }, 9000);
 }
 
 connectSocket();
@@ -81,11 +86,12 @@ client.on('message', (topic, message) => {
 
 function handle_override_topic(message) {
     ledcontrol = (message.toString()[0] === '1');
-    if (ws.readyState != WebSocket.OPEN) throw new Error('Not connected');
-    ws.send(JSON.stringify({
-        action: 'post',
-        payload: ledcontrol
-    }));
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({
+          action: 'post',
+          payload: ledcontrol
+      }));
+    }
     console.log("override published, led to %s", ledcontrol ? 'up' : 'off');
 }
 
