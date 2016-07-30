@@ -7,7 +7,7 @@ const server = require('http').createServer(),
     }),
     express = require('express'),
     app = express(),
-    port = 8889,
+    port = process.env.PORT || 8889,
     bodyParser = require('body-parser');
 
 let ledstate = false;
