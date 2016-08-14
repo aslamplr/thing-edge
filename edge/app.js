@@ -1,11 +1,6 @@
-const config = require("../.config.json"),
-    mqtt = require("mqtt"),
-    client = mqtt.connect(config.mqtt),
+const config = require('../.config.json'),
+    coap = require('coap'),
     WebSocket = require('ws');
-
-const status_topic = 'esp8266/status/led',
-    control_topic = 'esp8266/control/led',
-    override_topic = 'esp8266/override/led';
 
 var ws;
 
@@ -62,52 +57,15 @@ function registerSocketEvents(){
 
 connectSocket();
 
-client.on('connect', () => {
-    client.subscribe(status_topic);
-    client.subscribe(control_topic);
-    client.subscribe(override_topic);
-});
-
-client.on('message', (topic, message) => {
-    switch (topic) {
-        case status_topic:
-            handle_status_update(message);
-            break;
-        case control_topic:
-            handle_control_topic(message);
-            break;
-        case override_topic:
-            handle_override_topic(message);
-            break;
-        default:
-            console.log("message from topic %s -> %s", topic, message);
-    }
-});
-
-function handle_override_topic(message) {
-    ledcontrol = (message.toString()[0] === '1');
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({
-          action: 'post',
-          payload: ledcontrol
-      }));
-    }
-    console.log("override published, led to %s", ledcontrol ? 'up' : 'off');
-}
-
-function handle_control_topic(message) {
-    ledcontrol = (message.toString()[0] === '1');
-    console.log("control published, led to %s", ledcontrol ? 'up' : 'off');
-}
-
-function handle_status_update(message) {
-    ledstate = (message.toString()[0] === '1');
-    console.log("status recvd from esp, led is %s", ledstate ? 'up' : 'off');
-}
-
 function command_esp(message) {
-    console.log("Sending message to esp %s %s", control_topic, message);
-    client.publish(control_topic, message);
+    console.log("Sending message to esp %s", message);
+    let outMsg = coap.request({
+      method: 'PUT',
+      hostname: '192.168.43.203',
+      pathname: '/led',
+      confirmable: true
+    });
+    outMsg.end(message);
 }
 
 function start_loop() {
